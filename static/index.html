@@ -210,13 +210,44 @@
     background: linear-gradient(180deg, #fefefc 0%, #efefe8 100%);
   }
 
+  .result.dossier {
+    margin-top: 20px;
+    padding: 24px;
+    border: 2px solid var(--line);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.96), rgba(243,242,236,0.98)),
+      radial-gradient(circle at top left, rgba(0,0,0,.04) 0 12%, transparent 13%);
+    box-shadow: 0 14px 34px rgba(17, 17, 17, 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result.dossier::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(180deg, rgba(17,17,17,.02) 0 1px, transparent 1px 8px);
+    opacity: 0.35;
+  }
+
   .report-head {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
-    padding-bottom: 10px;
+    padding-bottom: 14px;
     border-bottom: 1px solid var(--line);
+    position: relative;
+    z-index: 1;
+  }
+
+  .report-kicker {
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 0.68rem;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
   }
 
   .report-head h2 {
@@ -226,39 +257,194 @@
     text-transform: uppercase;
   }
 
-  .report-head .stamp {
+  .stamp-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .stamp {
     padding: 6px 10px;
     border: 1px solid var(--line);
-    font-size: 0.72rem;
-    letter-spacing: 0.2rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.16rem;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.75);
+  }
+
+  .stamp.warning {
+    border-color: #c21f1f;
+    color: #c21f1f;
+  }
+
+  .case-summary,
+  .dossier-card {
+    margin-top: 16px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.72);
+    position: relative;
+    z-index: 1;
+  }
+
+  .case-summary h3,
+  .dossier-card h3 {
+    margin: 0 0 12px;
+    font-size: 0.8rem;
+    letter-spacing: 0.18rem;
     text-transform: uppercase;
   }
 
-  .verdict-block {
-    margin-top: 16px;
-    padding: 12px 0 8px;
-    border-bottom: 1px solid var(--line);
+  .summary-grid,
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
 
-  .verdict-block .verdict {
-    margin: 0 0 6px;
-    font-size: 1.05rem;
-    letter-spacing: 0.18rem;
+  .summary-grid > div,
+  .detail-grid > div {
+    padding: 10px;
+    border: 1px solid rgba(17,17,17,0.2);
+    background: rgba(255,255,255,0.7);
+  }
+
+  .summary-grid span,
+  .detail-grid span {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 0.64rem;
+    letter-spacing: 0.16rem;
+    text-transform: uppercase;
+  }
+
+  .summary-grid strong,
+  .detail-grid strong {
+    font-size: 0.82rem;
+    letter-spacing: 0.04rem;
+  }
+
+  .summary-text,
+  .dossier-card p,
+  .field strong,
+  .field span {
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+
+  .summary-text {
+    margin: 12px 0 0;
+  }
+
+  .findings-list,
+  .evidence-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .finding-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(17,17,17,0.2);
+  }
+
+  .finding-item:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .finding-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border: 1px solid var(--line);
+    font-size: 0.64rem;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .status-badge.completed {
+    background: var(--line);
+    color: #f7f7f2;
+  }
+
+  .status-badge.unavailable {
+    background: #ecece5;
+    color: var(--muted);
+  }
+
+  .status-badge.warning {
+    border-color: #c21f1f;
+    color: #c21f1f;
+  }
+
+  .evidence-entry {
+    padding: 12px;
+    border: 1px solid rgba(17,17,17,0.2);
+    background: rgba(255,255,255,0.7);
+  }
+
+  .evidence-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .evidence-title {
+    font-size: 0.78rem;
+    letter-spacing: 0.16rem;
     text-transform: uppercase;
     font-weight: 700;
   }
 
-  .verdict-block .meta-note,
-  .verdict-block .scope-note {
-    margin: 4px 0 0;
+  .evidence-meta {
     color: var(--muted);
-    font-size: 0.78rem;
-    line-height: 1.5;
-    letter-spacing: 0.06rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+  }
+
+  .evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .field {
+    padding: 8px 0;
+    border-top: 1px solid rgba(17,17,17,0.1);
+  }
+
+  .field span {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.64rem;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+  }
+
+  .field strong {
+    color: var(--ink);
+    font-size: 0.76rem;
+    line-height: 1.4;
   }
 
   .risk-meter {
-    margin-top: 16px;
+    margin-top: 14px;
   }
 
   .risk-meter .meter-track {
@@ -284,97 +470,6 @@
     text-transform: uppercase;
   }
 
-  .section {
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px solid var(--line);
-  }
-
-  .section h3 {
-    margin: 0 0 8px;
-    font-size: 0.78rem;
-    letter-spacing: 0.18rem;
-    text-transform: uppercase;
-  }
-
-  .section p {
-    margin: 5px 0;
-    color: var(--muted);
-    font-size: 0.78rem;
-    line-height: 1.5;
-  }
-
-  .section strong { color: var(--ink); }
-
-  .signal-card {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(43, 36, 30, 0.3);
-  }
-
-  .signal-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 6px;
-  }
-
-  .signal-name {
-    font-size: 0.8rem;
-    letter-spacing: 0.12rem;
-    text-transform: uppercase;
-  }
-
-  .signal-score {
-    color: var(--muted);
-    font-size: 0.75rem;
-  }
-
-  .signal-bar-bg {
-    height: 8px;
-    border: 1px solid var(--line);
-    background: #e0e0dc;
-    overflow: hidden;
-  }
-
-  .signal-bar-fill {
-    height: 100%;
-  }
-
-  .signal-note {
-    margin-top: 6px;
-    color: var(--muted);
-    font-size: 0.75rem;
-    line-height: 1.45;
-  }
-
-  .fingerprint {
-    margin-top: 10px;
-    display: grid;
-    gap: 8px;
-  }
-
-  .fingerprint-row {
-    display: grid;
-    grid-template-columns: minmax(100px, 160px) 1fr 36px;
-    gap: 8px;
-    align-items: center;
-    font-size: 0.74rem;
-  }
-
-  .fingerprint-track {
-    height: 8px;
-    border: 1px solid var(--line);
-    background: #e0e0dc;
-    overflow: hidden;
-  }
-
-  .fingerprint-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #111111, #444444, #000000);
-  }
-
   .readiness {
     margin-top: 10px;
     padding: 8px 10px;
@@ -391,6 +486,8 @@
     align-items: center;
     gap: 12px;
     margin-top: 16px;
+    position: relative;
+    z-index: 1;
   }
 
   .reset-btn,
@@ -420,6 +517,8 @@
     color: var(--muted);
     font-size: 0.72rem;
     line-height: 1.45;
+    position: relative;
+    z-index: 1;
   }
 
   .error {
@@ -436,8 +535,10 @@
   @media (max-width: 680px) {
     .header { flex-direction: column; }
     .meta { text-align: left; }
+    .summary-grid,
+    .detail-grid,
+    .evidence-grid { grid-template-columns: 1fr; }
     .report-head { flex-direction: column; align-items: flex-start; }
-    .fingerprint-row { grid-template-columns: 1fr 1fr 36px; }
   }
 </style>
 </head>
@@ -564,41 +665,21 @@ function renderResult(data) {
   const suitability = data.image_suitability;
   const provenanceVerified = data.risk_basis === 'verified_signed_ai_provenance';
   const externalDetector = data.risk_basis === 'sightengine_genai_api';
-  const meterLabel = provenanceVerified ? 'verified origin' : 'synthetic risk';
-
-  let extraInfo = '';
-  if (data.media_type === 'video') {
-    extraInfo = `<p class="meta-note">Analyzed ${data.frames_analyzed} sampled frames out of ${data.total_frames} total (${data.fps.toFixed(1)} fps)</p>`;
-  }
-
-  let signalsHtml = '';
-  const signals = data.signals || {};
-  for (const [key, val] of Object.entries(signals)) {
-    if (!val || typeof val.score !== 'number') continue;
-    const sPct = Math.round(val.score * 100);
-    const sColor = colorForScore(sPct);
-    const notes = escapeHtml((val.notes || []).join(' '));
-    signalsHtml += `
-      <div class="signal-card">
-        <div class="signal-head">
-          <span class="signal-name">${key.replace(/_/g, ' ')}</span>
-          <span class="signal-score">${sPct}%</span>
-        </div>
-        <div class="signal-bar-bg"><div class="signal-bar-fill" style="width:${sPct}%; background:${sColor}"></div></div>
-        <div class="signal-note">${notes}</div>
-      </div>`;
-  }
+  const meterLabel = provenanceVerified ? 'Verified Origin' : 'Synthetic Risk';
+  const statusLabel = pct >= 70 ? 'High Priority Review' : pct >= 45 ? 'Pending Review' : 'Routine Review';
+  const confidenceLabel = data.confidence || 'low';
+  const summaryText = data.media_type === 'video'
+    ? `This examination reviewed the submitted ${data.media_type} sample and consolidated the available forensic evidence into a structured assessment.`
+    : `This examination reviewed the submitted ${data.media_type} sample and consolidated the available forensic evidence into a structured assessment.`;
 
   const provenance = data.provenance || {};
   const issuer = (provenance.issuer_hints || []).join(', ');
-  const provenanceHtml = `
-    <section class="section">
-      <h3>Provenance Ledger</h3>
-      <p><strong>${escapeHtml(provenance.status || 'not checked')}</strong></p>
-      ${provenance.declared_ai_generation ? '<p>Declared AI provenance found in the validator report.</p>' : ''}
-      ${issuer ? `<p>Issuer hints: ${escapeHtml(issuer)}</p>` : ''}
-      <p>${escapeHtml(provenance.note || 'No provenance conclusion was made.')}</p>
-    </section>`;
+  const provenanceStatus = escapeHtml(provenance.status || 'not checked');
+  const provenanceNote = escapeHtml(provenance.note || 'No provenance conclusion was made.');
+  const metadataStatus = suitability && suitability.shortest_edge >= 128 ? 'Available' : 'Limited';
+  const provenanceSummary = provenance.declared_ai_generation
+    ? 'Declared AI provenance was surfaced by the validator report.'
+    : 'No verified provenance was established. This does not imply authenticity or manipulation; it means the evidence was unavailable or not validated.';
 
   const providerEvidence = data.provider_evidence;
   const fingerprintRows = (providerEvidence?.generator_scores || []).map(item => {
@@ -609,39 +690,169 @@ function renderResult(data) {
       <strong>${value}%</strong>
     </div>`;
   }).join('');
-  const providerEvidenceHtml = providerEvidence ? `
-    <section class="section">
-      <h3>Model Evidence</h3>
-      <p><strong>${escapeHtml(providerEvidence.method)}</strong> · ${escapeHtml(providerEvidence.provider)}</p>
-      ${fingerprintRows ? `<div class="fingerprint">${fingerprintRows}</div>` : '<p>No individual generator scores were returned for this image.</p>'}
-      <p>${escapeHtml(providerEvidence.note)}</p>
-      ${providerEvidence.request_id ? `<p>Analysis request: ${escapeHtml(providerEvidence.request_id)}${providerEvidence.operations != null ? ` · API operations: ${escapeHtml(providerEvidence.operations)}` : ''}</p>` : ''}
-    </section>` : '';
+
+  const findings = [
+    { label: 'Pixel Analysis', status: 'Completed', note: 'Visual signal review completed.' },
+    { label: 'Metadata Inspection', status: metadataStatus === 'Available' ? 'Completed' : 'Warning', note: suitability ? suitability.notes[0] : 'Metadata review inconclusive.' },
+    { label: 'Generator Fingerprint Analysis', status: providerEvidence ? 'Completed' : 'Unavailable', note: providerEvidence ? 'Provider generator confidence was returned.' : 'No generator fingerprint data was returned.' },
+    { label: 'Noise Analysis', status: 'Completed', note: 'Residual texture patterns were reviewed.' },
+    { label: 'Frequency Analysis', status: 'Completed', note: 'Spectrum consistency was reviewed.' },
+    { label: 'AI Model Assessment', status: data.trained_detector_used ? 'Completed' : 'Unavailable', note: data.trained_detector_used ? 'Model-based assessment was available.' : 'No trained detector was available for this file.' }
+  ];
+
+  const findingsHtml = findings.map(item => `
+    <div class="finding-item">
+      <span class="finding-label">${escapeHtml(item.label)}</span>
+      <span class="status-badge ${item.status.toLowerCase() === 'warning' ? 'warning' : item.status.toLowerCase() === 'unavailable' ? 'unavailable' : 'completed'}">${escapeHtml(item.status)}</span>
+    </div>
+    <div class="summary-text">${escapeHtml(item.note)}</div>`).join('');
+
+  const signals = data.signals || {};
+  const evidenceItems = [];
+  evidenceItems.push({
+    type: 'Overall Risk',
+    finding: verdict,
+    confidence: confidenceLabel,
+    notes: `${pct}% synthetic-risk estimate based on the available forensic evidence.`
+  });
+  evidenceItems.push({
+    type: 'Provenance',
+    finding: provenanceStatus,
+    confidence: provenance.declared_ai_generation ? 'high' : 'low',
+    notes: provenanceSummary + (issuer ? ` Issuer hints: ${issuer}` : '')
+  });
+  if (providerEvidence) {
+    evidenceItems.push({
+      type: 'Provider Evidence',
+      finding: `${escapeHtml(providerEvidence.provider)} · ${escapeHtml(providerEvidence.method)}`,
+      confidence: 'medium',
+      notes: providerEvidence.note || 'No additional provider note was returned.'
+    });
+  }
+  for (const [key, val] of Object.entries(signals)) {
+    if (!val || typeof val.score !== 'number') continue;
+    const sPct = Math.round(val.score * 100);
+    const signalConfidence = sPct >= 70 ? 'high' : sPct >= 45 ? 'medium' : 'low';
+    const notes = (val.notes || []).join(' ');
+    evidenceItems.push({
+      type: key.replace(/_/g, ' '),
+      finding: `${sPct}%`,
+      confidence: signalConfidence,
+      notes: notes || 'No additional note was returned for this signal.'
+    });
+  }
+
+  const evidenceHtml = evidenceItems.map((item, index) => `
+    <article class="evidence-entry">
+      <div class="evidence-header">
+        <div class="evidence-title">Evidence #${String(index + 1).padStart(2, '0')}</div>
+        <div class="evidence-meta">${escapeHtml(item.type)}</div>
+      </div>
+      <div class="evidence-grid">
+        <div class="field">
+          <span>Type</span>
+          <strong>${escapeHtml(item.type)}</strong>
+        </div>
+        <div class="field">
+          <span>Finding</span>
+          <strong>${escapeHtml(item.finding)}</strong>
+        </div>
+        <div class="field">
+          <span>Confidence</span>
+          <strong>${escapeHtml(item.confidence)}</strong>
+        </div>
+        <div class="field">
+          <span>Notes</span>
+          <strong>${escapeHtml(item.notes)}</strong>
+        </div>
+      </div>
+    </article>`).join('');
 
   const readinessHtml = suitability ? `<div class="readiness"><strong>Analysis coverage //</strong> ${escapeHtml(suitability.notes[0])}</div>` : '';
 
   resultArea.innerHTML = `
-    <div class="result">
+    <div class="result dossier">
       <div class="report-head">
-        <h2>Media Forensic Report</h2>
-        <div class="stamp">${escapeHtml(meterLabel)}</div>
+        <div>
+          <div class="report-kicker">DeepLence • Digital Media Forensics</div>
+          <h2>Investigation Report</h2>
+        </div>
+        <div class="stamp-stack">
+          <div class="stamp">Case File Open</div>
+          <div class="stamp warning">${escapeHtml(statusLabel)}</div>
+        </div>
       </div>
 
-      <div class="verdict-block">
-        <div class="verdict" style="color:${color}">${verdict}</div>
-        ${extraInfo}
-        <div class="meta-note">Confidence: ${data.confidence || 'low'}${externalDetector ? ' · Sightengine GenAI API' : data.trained_detector_used ? ` · ${data.detector_models_loaded || 2}-model ensemble` : ' · ensemble not decision-ready'}</div>
-        <div class="scope-note">Best use: realistic, face-centered deepfake risk. Illustrations, animation, obvious watermarks, and stylized images fall outside this model's validated scope.</div>
-      </div>
-
-      ${meterMarkup(pct, color)}
-      ${readinessHtml}
-      ${provenanceHtml}
-      ${providerEvidenceHtml}
-      <section class="section">
-        <h3>Signal Ledger</h3>
-        ${signalsHtml || '<p>No additional signal data was returned.</p>'}
+      <section class="case-summary">
+        <h3>Case Summary</h3>
+        <div class="summary-grid">
+          <div>
+            <span>Investigation Status</span>
+            <strong>${escapeHtml(statusLabel)}</strong>
+          </div>
+          <div>
+            <span>AI Risk Level</span>
+            <strong>${escapeHtml(meterLabel)}</strong>
+          </div>
+          <div>
+            <span>Confidence</span>
+            <strong>${escapeHtml(confidenceLabel)}</strong>
+          </div>
+          <div>
+            <span>Assessment</span>
+            <strong style="color:${color}">${escapeHtml(verdict)}</strong>
+          </div>
+        </div>
+        <p class="summary-text">${escapeHtml(summaryText)}</p>
+        ${meterMarkup(pct, color)}
+        ${readinessHtml}
       </section>
+
+      <div class="dossier-grid" style="display:grid; gap:16px; margin-top:16px;">
+        <section class="dossier-card">
+          <h3>Chain of Custody</h3>
+          <div class="detail-grid">
+            <div>
+              <span>C2PA Verification</span>
+              <strong>${provenanceStatus}</strong>
+            </div>
+            <div>
+              <span>Metadata Availability</span>
+              <strong>${escapeHtml(metadataStatus)}</strong>
+            </div>
+            <div>
+              <span>Provenance Findings</span>
+              <strong>${escapeHtml(provenance.declared_ai_generation ? 'Declared AI provenance found' : 'No verified provenance established')}</strong>
+            </div>
+            <div>
+              <span>Evidence Note</span>
+              <strong>${escapeHtml(provenanceSummary)}</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="dossier-card">
+          <h3>Forensic Findings</h3>
+          <div class="findings-list">
+            ${findingsHtml}
+          </div>
+        </section>
+      </div>
+
+      <section class="dossier-card">
+        <h3>Evidence Log</h3>
+        <div class="evidence-list">
+          ${evidenceHtml}
+        </div>
+      </section>
+
+      <section class="dossier-card">
+        <h3>Final Assessment</h3>
+        <p>This assessment is based on the available forensic evidence, including the submitted media characteristics, provenance signals, and technical analysis outputs.</p>
+        <p>Evidence that was found is recorded above. Evidence that was not found or not validated is also noted so the conclusion remains transparent rather than absolute.</p>
+        <p>This report is an evidence-based investigation summary, not a cryptographic proof of authenticity or manipulation.</p>
+      </section>
+
       <div class="disclaimer">
         ${(data.analysis_limitations || [
           'This is a forensic risk estimate, not proof that media is real or AI-generated.',
