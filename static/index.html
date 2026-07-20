@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepLence — Forensic Media Desk</title>
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --paper: #f7f7f2;
+    --paper-2: #ecece5;
+    --line: #111111;
+    --muted: #4d4d4d;
+    --accent: #111111;
+    --red: #111111;
+    --amber: #111111;
+    --green: #111111;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 24px 16px 36px;
+    font-family: "Courier New", Courier, monospace;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at top left, rgba(0,0,0,.03) 0 18%, transparent 19%),
+      linear-gradient(135deg, #f0f0ea 0%, #e2e2da 100%);
+  }
+
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  .case-file {
+    position: relative;
+    background: linear-gradient(180deg, #fdfdf9 0%, #ecece4 100%);
+    border: 2px solid var(--line);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.14);
+    overflow: hidden;
+  }
+
+  .case-file::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.02) 0 1px,
+      transparent 1px 10px
+    );
+    opacity: 0.35;
+  }
+
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px 28px 16px;
+    border-bottom: 2px solid var(--line);
+    background: rgba(255,255,255,0.24);
+  }
+
+  .brand h1 {
+    margin: 0;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    letter-spacing: 0.22rem;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .brand .tagline {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 0.74rem;
+    letter-spacing: 0.26rem;
+    text-transform: uppercase;
+  }
+
+  .meta {
+    text-align: right;
+    font-size: 0.72rem;
+    letter-spacing: 0.2rem;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .meta .stamp {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.7);
+  }
+
+  .main {
+    padding: 24px 28px 30px;
+  }
+
+  .dropzone {
+    border: 2px dashed var(--line);
+    padding: 24px 18px;
+    text-align: center;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .dropzone.drag {
+    border-color: var(--accent);
+    background: rgba(0,0,0,0.08);
+  }
+
+  .dropzone .folder {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 0.96rem;
+    letter-spacing: 0.24rem;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .dropzone .folder-icon {
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    background: #e8dfd0;
+    font-size: 1.2rem;
+  }
+
+  .dropzone p {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.12rem;
+    text-transform: uppercase;
+  }
+
+  input[type="file"] { display: none; }
+
+  .preview {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .preview img,
+  .preview video {
+    max-width: 100%;
+    max-height: 320px;
+    border: 2px solid var(--line);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+    background: #fff;
+  }
+
+  .loading-panel {
+    margin-top: 20px;
+    padding: 18px 18px 20px;
+    border: 1px solid var(--line);
+    background: #eeeeea;
+  }
+
+  .loading-title {
+    font-size: 0.8rem;
+    letter-spacing: 0.24rem;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .loading-bars {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .loading-bars span {
+    width: 10px;
+    height: 22px;
+    background: var(--ink);
+    animation: scan 1.05s ease-in-out infinite;
+  }
+
+  .loading-bars span:nth-child(2) { animation-delay: 0.13s; }
+  .loading-bars span:nth-child(3) { animation-delay: 0.26s; }
+  .loading-bars span:nth-child(4) { animation-delay: 0.39s; }
+  .loading-bars span:nth-child(5) { animation-delay: 0.52s; }
+
+  .loading-copy {
+    margin: 10px 0 0;
+    font-size: 0.82rem;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  @keyframes scan {
+    0%, 100% { transform: scaleY(0.45); opacity: 0.45; }
+    50% { transform: scaleY(1); opacity: 1; }
+  }
+
+  .result {
+    margin-top: 20px;
+    padding: 22px;
+    border: 2px solid var(--line);
+    background: linear-gradient(180deg, #fefefc 0%, #efefe8 100%);
+  }
+
+  .report-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .report-head h2 {
+    margin: 0;
+    font-size: 1rem;
+    letter-spacing: 0.22rem;
+    text-transform: uppercase;
+  }
+
+  .report-head .stamp {
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    font-size: 0.72rem;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+  }
+
+  .verdict-block {
+    margin-top: 16px;
+    padding: 12px 0 8px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .verdict-block .verdict {
+    margin: 0 0 6px;
+    font-size: 1.05rem;
+    letter-spacing: 0.18rem;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .verdict-block .meta-note,
+  .verdict-block .scope-note {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    letter-spacing: 0.06rem;
+  }
+
+  .risk-meter {
+    margin-top: 16px;
+  }
+
+  .risk-meter .meter-track {
+    height: 12px;
+    border: 1px solid var(--line);
+    background: #f1dede;
+    overflow: hidden;
+  }
+
+  .risk-meter .meter-fill {
+    height: 100%;
+    transition: width 0.35s ease;
+    background: #c21f1f;
+  }
+
+  .risk-meter .meter-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 0.68rem;
+    letter-spacing: 0.16rem;
+    text-transform: uppercase;
+  }
+
+  .section {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+
+  .section h3 {
+    margin: 0 0 8px;
+    font-size: 0.78rem;
+    letter-spacing: 0.18rem;
+    text-transform: uppercase;
+  }
+
+  .section p {
+    margin: 5px 0;
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  .section strong { color: var(--ink); }
+
+  .signal-card {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(43, 36, 30, 0.3);
+  }
+
+  .signal-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .signal-name {
+    font-size: 0.8rem;
+    letter-spacing: 0.12rem;
+    text-transform: uppercase;
+  }
+
+  .signal-score {
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  .signal-bar-bg {
+    height: 8px;
+    border: 1px solid var(--line);
+    background: #e0e0dc;
+    overflow: hidden;
+  }
+
+  .signal-bar-fill {
+    height: 100%;
+  }
+
+  .signal-note {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 0.75rem;
+    line-height: 1.45;
+  }
+
+  .fingerprint {
+    margin-top: 10px;
+    display: grid;
+    gap: 8px;
+  }
+
+  .fingerprint-row {
+    display: grid;
+    grid-template-columns: minmax(100px, 160px) 1fr 36px;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.74rem;
+  }
+
+  .fingerprint-track {
+    height: 8px;
+    border: 1px solid var(--line);
+    background: #e0e0dc;
+    overflow: hidden;
+  }
+
+  .fingerprint-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #111111, #444444, #000000);
+  }
+
+  .readiness {
+    margin-top: 10px;
+    padding: 8px 10px;
+    border-left: 3px solid var(--line);
+    background: rgba(0,0,0,.03);
+    color: var(--muted);
+    font-size: 0.74rem;
+    line-height: 1.45;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .reset-btn,
+  .verify-link {
+    display: inline-block;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    background: #111111;
+    color: #f7f7f2;
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .reset-btn:hover,
+  .verify-link:hover {
+    background: #fff;
+    color: var(--ink);
+  }
+
+  .disclaimer {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 1.45;
+  }
+
+  .error {
+    margin-top: 16px;
+    padding: 12px;
+    border: 1px solid var(--red);
+    color: var(--red);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12rem;
+    background: rgba(17, 17, 17, 0.06);
+  }
+
+  @media (max-width: 680px) {
+    .header { flex-direction: column; }
+    .meta { text-align: left; }
+    .report-head { flex-direction: column; align-items: flex-start; }
+    .fingerprint-row { grid-template-columns: 1fr 1fr 36px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="case-file">
+      <header class="header">
+        <div class="brand">
+          <h1>DeepLence</h1>
+          <div class="tagline">Forensic Media Desk // Case File Intake</div>
+        </div>
+        <div class="meta">
+          <div>Case No. 001</div>
+          <div>Evidence Portal</div>
+          <div class="stamp">Classified</div>
+        </div>
+      </header>
+
+      <div class="main">
+        <div class="dropzone" id="dropzone">
+          <div class="folder">
+            <span class="folder-icon">▣</span>
+            <span>Evidence Intake</span>
+          </div>
+          <strong>Drop an image or video into the file docket</strong>
+          <p>or click to browse // JPG, PNG, WEBP, MP4, MOV supported</p>
+          <input type="file" id="fileInput" accept="image/*,video/*">
+        </div>
+
+        <div id="previewArea"></div>
+        <div id="loadingArea"></div>
+        <div id="resultArea"></div>
+        <div id="errorArea"></div>
+      </div>
+    </section>
+  </div>
+
+<script>
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const previewArea = document.getElementById('previewArea');
+const loadingArea = document.getElementById('loadingArea');
+const resultArea = document.getElementById('resultArea');
+const errorArea = document.getElementById('errorArea');
+
+dropzone.addEventListener('click', () => fileInput.click());
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropzone.classList.remove('drag');
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length) handleFile(fileInput.files[0]);
+});
+
+function colorForScore(pct) {
+  if (pct >= 70) return getComputedStyle(document.documentElement).getPropertyValue('--red');
+  if (pct >= 45) return getComputedStyle(document.documentElement).getPropertyValue('--amber');
+  return getComputedStyle(document.documentElement).getPropertyValue('--green');
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+  }[char]));
+}
+
+function handleFile(file) {
+  resultArea.innerHTML = '';
+  errorArea.innerHTML = '';
+  previewArea.innerHTML = '';
+
+  const url = URL.createObjectURL(file);
+  const isVideo = file.type.startsWith('video');
+  previewArea.innerHTML = `<div class="preview">${
+    isVideo ? `<video src="${url}" controls></video>` : `<img src="${url}">`
+  }</div>`;
+
+  loadingArea.innerHTML = `
+    <div class="loading-panel">
+      <div class="loading-title">[ Examination in progress ]</div>
+      <div class="loading-bars"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="loading-copy">Processing ${isVideo ? 'video frames' : 'image evidence'} // running forensic signals</div>
+    </div>`;
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  fetch('/analyze', { method: 'POST', body: formData })
+    .then(async res => {
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({detail: 'Analysis failed'}));
+        throw new Error(err.detail || 'Analysis failed');
+      }
+      return res.json();
+    })
+    .then(renderResult)
+    .catch(err => {
+      errorArea.innerHTML = `<div class="error">[ Analysis Error ] ${escapeHtml(err.message)}</div>`;
+    })
+    .finally(() => { loadingArea.innerHTML = ''; });
+}
+
+function meterMarkup(pct, color) {
+  return `
+    <div class="risk-meter">
+      <div class="meter-track">
+        <div class="meter-fill" style="width:${pct}%; background:${color}"></div>
+      </div>
+      <div class="meter-labels">
+        <span>Low</span><span>Medium</span><span>High</span>
+      </div>
+    </div>`;
+}
+
+function renderResult(data) {
+  const pct = data.ai_probability_percent;
+  const color = (data.trained_detector_used || data.provenance?.declared_ai_generation)
+    ? colorForScore(pct)
+    : getComputedStyle(document.documentElement).getPropertyValue('--amber');
+  const verdict = data.verdict;
+  const suitability = data.image_suitability;
+  const provenanceVerified = data.risk_basis === 'verified_signed_ai_provenance';
+  const externalDetector = data.risk_basis === 'sightengine_genai_api';
+  const meterLabel = provenanceVerified ? 'verified origin' : 'synthetic risk';
+
+  let extraInfo = '';
+  if (data.media_type === 'video') {
+    extraInfo = `<p class="meta-note">Analyzed ${data.frames_analyzed} sampled frames out of ${data.total_frames} total (${data.fps.toFixed(1)} fps)</p>`;
+  }
+
+  let signalsHtml = '';
+  const signals = data.signals || {};
+  for (const [key, val] of Object.entries(signals)) {
+    if (!val || typeof val.score !== 'number') continue;
+    const sPct = Math.round(val.score * 100);
+    const sColor = colorForScore(sPct);
+    const notes = escapeHtml((val.notes || []).join(' '));
+    signalsHtml += `
+      <div class="signal-card">
+        <div class="signal-head">
+          <span class="signal-name">${key.replace(/_/g, ' ')}</span>
+          <span class="signal-score">${sPct}%</span>
+        </div>
+        <div class="signal-bar-bg"><div class="signal-bar-fill" style="width:${sPct}%; background:${sColor}"></div></div>
+        <div class="signal-note">${notes}</div>
+      </div>`;
+  }
+
+  const provenance = data.provenance || {};
+  const issuer = (provenance.issuer_hints || []).join(', ');
+  const provenanceHtml = `
+    <section class="section">
+      <h3>Provenance Ledger</h3>
+      <p><strong>${escapeHtml(provenance.status || 'not checked')}</strong></p>
+      ${provenance.declared_ai_generation ? '<p>Declared AI provenance found in the validator report.</p>' : ''}
+      ${issuer ? `<p>Issuer hints: ${escapeHtml(issuer)}</p>` : ''}
+      <p>${escapeHtml(provenance.note || 'No provenance conclusion was made.')}</p>
+    </section>`;
+
+  const providerEvidence = data.provider_evidence;
+  const fingerprintRows = (providerEvidence?.generator_scores || []).map(item => {
+    const value = Math.round(item.score * 100);
+    return `<div class="fingerprint-row">
+      <span>${escapeHtml(item.generator.replace(/_/g, ' '))}</span>
+      <div class="fingerprint-track"><div class="fingerprint-fill" style="width:${value}%"></div></div>
+      <strong>${value}%</strong>
+    </div>`;
+  }).join('');
+  const providerEvidenceHtml = providerEvidence ? `
+    <section class="section">
+      <h3>Model Evidence</h3>
+      <p><strong>${escapeHtml(providerEvidence.method)}</strong> · ${escapeHtml(providerEvidence.provider)}</p>
+      ${fingerprintRows ? `<div class="fingerprint">${fingerprintRows}</div>` : '<p>No individual generator scores were returned for this image.</p>'}
+      <p>${escapeHtml(providerEvidence.note)}</p>
+      ${providerEvidence.request_id ? `<p>Analysis request: ${escapeHtml(providerEvidence.request_id)}${providerEvidence.operations != null ? ` · API operations: ${escapeHtml(providerEvidence.operations)}` : ''}</p>` : ''}
+    </section>` : '';
+
+  const readinessHtml = suitability ? `<div class="readiness"><strong>Analysis coverage //</strong> ${escapeHtml(suitability.notes[0])}</div>` : '';
+
+  resultArea.innerHTML = `
+    <div class="result">
+      <div class="report-head">
+        <h2>Media Forensic Report</h2>
+        <div class="stamp">${escapeHtml(meterLabel)}</div>
+      </div>
+
+      <div class="verdict-block">
+        <div class="verdict" style="color:${color}">${verdict}</div>
+        ${extraInfo}
+        <div class="meta-note">Confidence: ${data.confidence || 'low'}${externalDetector ? ' · Sightengine GenAI API' : data.trained_detector_used ? ` · ${data.detector_models_loaded || 2}-model ensemble` : ' · ensemble not decision-ready'}</div>
+        <div class="scope-note">Best use: realistic, face-centered deepfake risk. Illustrations, animation, obvious watermarks, and stylized images fall outside this model's validated scope.</div>
+      </div>
+
+      ${meterMarkup(pct, color)}
+      ${readinessHtml}
+      ${provenanceHtml}
+      ${providerEvidenceHtml}
+      <section class="section">
+        <h3>Signal Ledger</h3>
+        ${signalsHtml || '<p>No additional signal data was returned.</p>'}
+      </section>
+      <div class="disclaimer">
+        ${(data.analysis_limitations || [
+          'This is a forensic risk estimate, not proof that media is real or AI-generated.',
+          'Missing metadata is neutral because it is commonly removed by platforms and editors.'
+        ]).join(' ')}
+      </div>
+      <div class="actions">
+        <button class="reset-btn" onclick="location.reload()">Analyze another file</button>
+        <a class="verify-link" href="https://openai.com/verify" target="_blank" rel="noopener">Verify possible OpenAI origin</a>
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>

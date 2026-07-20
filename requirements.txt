@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+pillow
+numpy
+scipy
+opencv-python-headless
+python-multipart
+requests
+
+# Optional: enables the neural classifier signal (recommended for accuracy).
+# The app runs fine without these too - it just falls back to heuristics only.
+torch
+transformers
+hf_xet
