@@ -143,5 +143,3 @@ http://localhost:8000
 DeepLence was created for the **OpenAI Build Week Hackathon 2026**.
 
 The project explores how AI can be used to to help people investigate suspicious digital content through transparent, explainable forensic analysis.
-
-**Codex Session ID:**019f7fb2-87d1-7200-b007-a5abd2c6fa92
