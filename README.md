@@ -151,4 +151,3 @@ DeepLence was created for the **OpenAI Build Week Hackathon 2026**.
 
 The project explores how AI can be used to to help people investigate suspicious digital content through transparent, explainable forensic analysis.
 
-
