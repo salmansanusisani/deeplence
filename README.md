@@ -127,8 +127,15 @@ cd deeplence
 
 pip install -r requirements.txt
 
+python setup_credentials.py
+
 uvicorn app.main:app --reload
 ```
+
+`setup_credentials.py` is a one-time step that asks for your Sightengine API
+user/secret (get these from your [Sightengine dashboard](https://sightengine.com))
+and saves them to a local `.env` file, which the app loads automatically on
+every run afterward. You only need to run it once per machine.
 
 Open:
 
@@ -144,4 +151,4 @@ DeepLence was created for the **OpenAI Build Week Hackathon 2026**.
 
 The project explores how AI can be used to to help people investigate suspicious digital content through transparent, explainable forensic analysis.
 
-**Codex Session ID:**019f7fb2-87d1-7200-b007-a5abd2c6fa92
+

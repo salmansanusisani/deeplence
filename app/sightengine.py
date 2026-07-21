@@ -10,7 +10,12 @@ import os
 from pathlib import Path
 
 import requests
+from dotenv import load_dotenv
 
+# Loads the .env file created by setup_credentials.py (project root, one
+# level up from this app/ package) so SIGHTENGINE_API_USER/SECRET are
+# available as environment variables without the user setting them by hand.
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 ENDPOINT = "https://api.sightengine.com/1.0/check.json"
 LEGACY_CONFIG_PATH = Path.home() / "Desktop" / "config.json"
@@ -58,9 +63,9 @@ def analyze_image(raw_bytes: bytes, filename: str) -> dict:
     api_user, api_secret = _credentials()
     if not api_user or not api_secret:
         raise RuntimeError(
-            "Sightengine is not configured. Set SIGHTENGINE_API_USER and "
-            "SIGHTENGINE_API_SECRET on the server, or save the keys with "
-            "the existing check_ai_image.py script."
+            "Sightengine is not configured. Run `python setup_credentials.py` "
+            "from the project root to save your API user/secret, or set "
+            "SIGHTENGINE_API_USER and SIGHTENGINE_API_SECRET manually."
         )
 
     try:
